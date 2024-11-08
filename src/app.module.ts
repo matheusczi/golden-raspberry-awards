@@ -1,12 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { MoviesService } from './movies/movies.service';
-import { MoviesController } from './movies/movies.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { MoviesModule } from './movies/movies.module';
+import { DataSeederService } from './data-seeder/data-seeder.service';
+import { Movie } from './movies/entities/movie.entity';
 
 @Module({
-  imports: [],
-  controllers: [AppController, MoviesController],
-  providers: [AppService, MoviesService],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: ':memory:',
+      entities: [Movie],
+      synchronize: true,
+    }),
+    MoviesModule,
+  ],
+  providers: [DataSeederService],
 })
 export class AppModule {}
